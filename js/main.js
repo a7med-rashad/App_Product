@@ -10,6 +10,18 @@ if (localStorage.getItem("tasks")) {
 }
 getDataLocSto(); 
 
+
+input.addEventListener("keyup", (e) => {
+    if (e.keyCode === 13) {
+        if (input.value !== "") {
+        
+            addTaskToArray(input.value);
+            
+            input.value = "";
+            
+            }
+    }
+})
 add.onclick = function () {
     if (input.value !== "") {
         
@@ -20,10 +32,29 @@ add.onclick = function () {
         }
 }
 tasksDiv.addEventListener("click", (e) => {
-    if (e.target.className === "del") {
+    if (e.target.classList.contains("del")) {
+        deleteTaskLocSto(e.target.parentElement.getAttribute("data-id"))
         e.target.parentElement.remove()
-}
+    }
+    if (e.target.classList.contains("checkbox")) {
+        if (e.target.parentElement.classList.contains("done")) {
+
+            e.target.parentElement.classList.remove("done");
+        }else {
+            toggleStatuesTask(e.target.parentElement.getAttribute("data-id"))
+
+            e.target.parentElement.classList.add("done");
+        }
+
+    }
+    if (e.target.classList.contains("task")) {
+
+        toggleStatuesTask(e.target.getAttribute("data-id"))
+        e.target.classList.toggle("done");
+    }
 })
+
+
 function addTaskToArray(inputTask) {
     const task = {
     id: Date.now(),
@@ -46,6 +77,10 @@ function addElementToPage(arrayOfTasks) {
         div.className = "task done";
         }
         div.setAttribute("data-id", task.id)
+        let checkBox = document.createElement("input");
+        checkBox.setAttribute("type", "checkbox");
+        checkBox.className = "checkbox"
+        div.appendChild(checkBox)
         div.appendChild(document.createTextNode(task.text))
         let span = document.createElement("span");
         span.className = "del";
@@ -64,4 +99,20 @@ function getDataLocSto() {
         let tasks = JSON.parse(data)
         addElementToPage(tasks);
     }
+}
+
+
+function deleteTaskLocSto(taskId) {
+    arrayOfTasks = arrayOfTasks.filter((task) => task.id != taskId)
+    locStoData(arrayOfTasks);
+}
+
+
+function toggleStatuesTask(taskId) {
+    for (let i =0; i < arrayOfTasks.length; i++) {
+        if (arrayOfTasks[i].id == taskId) {
+            arrayOfTasks[i].complete == false ? arrayOfTasks[i].complete = true : arrayOfTasks[i].complete = false
+        }
+    }
+    locStoData(arrayOfTasks);
 }
