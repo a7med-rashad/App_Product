@@ -37,22 +37,35 @@ tasksDiv.addEventListener("click", (e) => {
         e.target.parentElement.remove()
     }
     if (e.target.classList.contains("checkbox")) {
-        if (e.target.parentElement.classList.contains("done")) {
+ 
+        toggleStatuesTask(e.target.parentElement.getAttribute("data-id"))
 
-            e.target.parentElement.classList.remove("done");
-        }else {
-            toggleStatuesTask(e.target.parentElement.getAttribute("data-id"))
-
-            e.target.parentElement.classList.add("done");
-        }
+        e.target.parentElement.classList.toggle("done");
 
     }
     if (e.target.classList.contains("task")) {
-
         toggleStatuesTask(e.target.getAttribute("data-id"))
-        e.target.classList.toggle("done");
+        if (e.target.classList.contains("done")) {
+            e.target.classList.remove("done");
+            e.target.children[0].checked = false
+        }else {
+            e.target.classList.add("done");
+            e.target.children[0].checked = true
+        }
+    }
+    if (e.target.classList.contains("task-text")) {
+        toggleStatuesTask(e.target.parentElement.getAttribute("data-id"))
+        if (e.target.parentElement.classList.contains("done")) {
+            e.target.parentElement.classList.remove("done");
+            e.target.parentElement.children[0].checked = false
+        }else {
+            e.target.parentElement.classList.add("done");
+            e.target.parentElement.children[0].checked = true
+        }
+
     }
 })
+
 
 
 function addTaskToArray(inputTask) {
@@ -73,15 +86,19 @@ function addElementToPage(arrayOfTasks) {
     arrayOfTasks.forEach((task) => {
         let div = document.createElement("div");
         div.className = "task";
-        if (task.complete === true) {
-        div.className = "task done";
-        }
         div.setAttribute("data-id", task.id)
         let checkBox = document.createElement("input");
         checkBox.setAttribute("type", "checkbox");
         checkBox.className = "checkbox"
         div.appendChild(checkBox)
-        div.appendChild(document.createTextNode(task.text))
+        if (task.complete === true) {
+        div.className = "task done";
+        checkBox.checked = true
+        }
+        let taskText = document.createElement("p")
+        taskText.className = "task-text"
+        taskText.appendChild(document.createTextNode(task.text))
+        div.appendChild(taskText);
         let span = document.createElement("span");
         span.className = "del";
         span.appendChild(document.createTextNode("X"));
