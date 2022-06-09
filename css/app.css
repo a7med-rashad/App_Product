@@ -17,12 +17,17 @@ body {
 }
 @media (max-width: 991px) {
     .container {
-        width: 80%;
+        width: 900px;
     }
 }
 @media (max-width: 720px) {
     .container {
-        width: 100%;
+        width: 650px;
+    }
+}
+@media (max-width: 560px) {
+    .container {
+        width: 500px;
     }
 }
 .container .form {
